@@ -16,12 +16,13 @@ class GameModel:
         self.timer = None
 
     def init_game_map(self, arr):
-        self.game_map = [[0 for _ in range(self.width)] for y in range(self.height)]
+        self.game_map = [[-999 for _ in range(self.width)] for y in range(self.height)]
         for i in range(self.height):
             for j in range(self.width):
-                if arr[i][j] == 'b':
-                    self.mines.append([i, j])
+                # if arr[i][j] == 'b':
+                #     self.mines.append([i, j])
                 self.game_map[i][j] = Pole(i, j, arr[i][j])
+        a = 2
 
 
     def start_timer(self):
@@ -38,14 +39,6 @@ class GameModel:
     def set_game_controller(self, controller):
         self.controller = controller
 
-    def _open_pole(self, x, y):
-        pole = self.game_map[x][y]
-        pole.viewed = True
-        pole.flag = 1
-        self.opened_fields += 1
-        self.controller.show_pole(x, y, pole.value)
-        if self.opened_fields >= self.width * self.height:
-            self.controller.game_won()
 
     def pole_is_changed(self, height, width):
         if not self.game_map[height][width].viewed:
@@ -59,7 +52,13 @@ class GameModel:
             return
         if self.game_map[x][y].viewed:
             return
-        self._open_pole(x, y)
+        pole = self.game_map[x][y]
+        pole.viewed = True
+        pole.flag = 1
+        self.opened_fields += 1
+        self.controller.show_pole(x, y, pole.value)
+        if self.opened_fields >= self.width * self.height:
+            self.controller.game_won()
         self.open_neighbor(x, y)
 
     def check_bombs(self, y, x):

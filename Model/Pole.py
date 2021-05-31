@@ -5,7 +5,7 @@ class Pole:
 
     def __init__(self, row, column, element):
         self.mine = False
-        self.value = 0
+        self.value = -111
         self.flag = 0
         self._check_bomb(element)
         # self.button = Button(master, width=3,
