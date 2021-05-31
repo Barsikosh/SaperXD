@@ -6,7 +6,6 @@ class GameModel:
 
     def __init__(self, new_game_map):
         self.game_map = None
-        self.mines = []
         self.flags = []
         self.height = len(new_game_map)
         self.width = len(new_game_map[0])
@@ -19,14 +18,11 @@ class GameModel:
         self.game_map = [[-999 for _ in range(self.width)] for y in range(self.height)]
         for i in range(self.height):
             for j in range(self.width):
-                # if arr[i][j] == 'b':
-                #     self.mines.append([i, j])
                 self.game_map[i][j] = Pole(i, j, arr[i][j])
-        a = 2
-
 
     def start_timer(self):
         self.timer = Timer()
+        self.timer.set_feed_back(self.controller.get_method_timer())
         self.timer.start()
 
     def get_left_time(self):

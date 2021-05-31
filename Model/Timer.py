@@ -32,9 +32,12 @@ class Timer:
         return string
 
 
+    def set_feed_back(self, method):
+        self.method = method
 
     def start(self):
         while True:
             self.seconds += 1
+            self.method()
             time.sleep(1)
 

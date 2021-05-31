@@ -54,3 +54,9 @@ class Controller:
 
     def game_won(self):
         self.game_view.game_won()
+
+    def get_method_timer(self):
+        return self.timer_feed_back
+
+    def set_method_timer(self, method):
+        self.timer_feed_back = method

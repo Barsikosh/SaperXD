@@ -13,6 +13,7 @@ class GameView(tkinter.Tk):
     def __init__(self, controller):
         super().__init__()
         self.controller = controller
+        self.controller.set_method_timer(self.update_timer)
         self.lvl = None
         self.lbl_hard = None
         self.lvl1 = None
@@ -85,10 +86,6 @@ class GameView(tkinter.Tk):
     def show_clear_pole(self, x, y, value):
         self.game_map[x][y].configure(text=value, bg='white')
 
-    def update_timer(self, time):
-        if self.play:
-            self.lbl_timer = Label(self.game_window, text=time, bg='green')
-
     def create_field(self):
         self.game_map = [[Button] * self.controller.get_height()] * self.controller.get_width()
         buttons = []
@@ -142,11 +139,16 @@ class GameView(tkinter.Tk):
             self.time_pass = self.controller.get_time()
             self.lbl_timer.config(text=self.controller.get_time())
 
+    def update_timer(self):
+        if self.play:
+            self.time_pass = self.controller.get_time()
+        self.lbl_timer.config(text=self.time_pass)
+
     def stage_play(self):
         self.play = True
         self.clear()
-
         gameMap = Creating_Map(self.lvl.get())
+
         if self.lvl.get() == 0:
             self.set_size('350x230')
         elif self.lvl.get() == 1:
@@ -159,4 +161,5 @@ class GameView(tkinter.Tk):
         gameModel.set_game_controller(self.controller)
         threading.Thread(target=self.controller.start_timer, daemon=True).start()
         threading.Thread(target=self.create_field).start()
-        threading.Thread(target=self.watch_timer, args=(), daemon=True).start()
+        self.btn_break.grid()
+        self.lbl_timer.grid()
