@@ -12,7 +12,6 @@ class Timer:
     def time(self):
         string = "00:00"
         if self.seconds > 59:
-            seconds = 0
             self.minutes += 1
             if self.minutes < 10:
                 string = str(self.minutes) + ":0" + str(self.seconds)

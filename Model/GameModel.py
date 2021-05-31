@@ -16,7 +16,7 @@ class GameModel:
         self.timer = None
 
     def init_game_map(self, arr):
-        self.game_map = [[0 for x in range(self.width)] for y in range(self.height)]
+        self.game_map = [[0 for _ in range(self.width)] for y in range(self.height)]
         for i in range(self.height):
             for j in range(self.width):
                 if arr[i][j] == 'b':

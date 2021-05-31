@@ -2,9 +2,11 @@ import tkinter
 from datetime import time
 from tkinter import *
 import threading
+import time
+
 from Saper2.Model.GameModel import GameModel
 from Saper2.Model.MapGenerator import Creating_Map
-import time
+
 
 class GameView(tkinter.Tk):
 
@@ -22,38 +24,40 @@ class GameView(tkinter.Tk):
         self.play = False
         self.time_pass = 0
 
-
     def init_view(self):
 
         self.stage_start()
         self.mainloop()
 
-
     def create_start_menu(self):
         self.clear()
         self.title("Сапёр")
-        self.geometry('450x250')
+        self["bg"] = "#bcb9ed"
+        self.geometry('250x330')
 
-
-        self.lbl_hard = Label(self, text="HARD-LVL")
-        self.lbl_hard.grid(column=0, row=0)
+        self.lbl_hard = Label(self, text="  Выберите уровень:\n💣💣💣\n", font="Calibri 19 bold", bg="#bcb9ed")
+        self.lbl_hard.grid(column=2, row=0)
 
         self.lvl = IntVar()
-        self.lvl1 = Radiobutton(self, text='Первый', value=0, variable=self.lvl)
-        self.lvl2 = Radiobutton(self, text='Второй', value=1, variable=self.lvl)
-        self.lvl3 = Radiobutton(self, text='Третий', value=2, variable=self.lvl)
-        self.lvl1.grid(column=0, row=1)
-        self.lvl2.grid(column=0, row=2)
-        self.lvl3.grid(column=0, row=3)
-
-        self.btn_start = Button(self, width=10, text="START", background='green')
+        self.lvl1 = Radiobutton(self, text="Лёгкий 😊", font="Calibri 22 bold", bg="#54e89b", value=0,
+                                variable=self.lvl)
+        self.lvl2 = Radiobutton(self, text="Средний 😐", font="Calibri 22 bold", bg="#ed9747", value=1,
+                                variable=self.lvl)
+        self.lvl3 = Radiobutton(self, text="Сложный 😞", font="Calibri 22 bold", bg="#ed3939", value=2,
+                                variable=self.lvl)
+        self.lvl1.grid(column=2, row=1, ipadx=14)
+        self.lvl2.grid(column=2, row=2, ipadx=4)
+        self.lvl3.grid(column=2, row=3)
+        self.temp = Label(self, text="", bg="#bcb9ed")
+        self.temp.grid(column=0, row=4)
+        self.btn_start = Button(self, text="💣 START 💣", font="Calibri 16 bold", bg='white')
         self.btn_start.bind('<Button-1>', lambda event: self.controller.start_game(event))
-        self.btn_start.grid(column=0, row=4)
+        self.btn_start.grid(column=2, row=5)
 
-        self.lbl_timer = Label(self, text="00:00", background='green')
+        self.lbl_timer = Label(self, text="00:00", font="Calibri 12 bold", bg='#f52c2c')
         self.lbl_timer.grid(column=0, row=0)
 
-        self.btn_break = Button(self, width=10, text="BREAK", background='yellow')
+        self.btn_break = Button(self, width=10, text="BREAK", bg='yellow')
         self.btn_break.bind('<Button-1>', lambda event: self.controller.stop_game(event))
         self.btn_break.grid(column=0, row=1)
         self.btn_break.grid_remove()
@@ -66,13 +70,13 @@ class GameView(tkinter.Tk):
         self.geometry(size)
 
     def set_flag(self, x, y):
-        self.game_map[x][y].configure(text="F", bg='green')
+        self.game_map[x][y].configure(text="🚩", bg='#7ef291')
 
     def create_pole(self, x, y):
-        button = Button(width=3)
+        button = Button(width=3, bg="#a9a9a9")
         button.bind('<Button-1>', lambda event, nx=x, ny=y: self.controller.pole_click_action(event, nx, ny))
         button.bind('<Button-3>', lambda event, nx=x, ny=y: self.controller.flag_added(event, nx, ny))
-        button.grid(row=x, column=y + 1)
+        button.grid(row=x, column=y + 1, sticky='NSEW')
         return button
 
     def unset_flag(self, x, y):
@@ -83,7 +87,7 @@ class GameView(tkinter.Tk):
 
     def update_timer(self, time):
         if self.play:
-            self.lbl_timer = Label(self.game_window, text=time, background='green')
+            self.lbl_timer = Label(self.game_window, text=time, bg='green')
 
     def create_field(self):
         self.game_map = [[Button] * self.controller.get_height()] * self.controller.get_width()
@@ -94,8 +98,11 @@ class GameView(tkinter.Tk):
                 button = self.create_pole(i, j)
                 temp.append(button)
             buttons.append(temp)
+        for k in range(len(self.game_map)):
+            for l in range(len(self.game_map[0])):
+                self.grid_columnconfigure(l + 1, weight=1)
+            self.grid_rowconfigure(k, weight=1)
         self.game_map = buttons
-
 
     def clear(self):
         list = self.grid_slaves()
@@ -104,20 +111,24 @@ class GameView(tkinter.Tk):
 
     def destroy_all(self):
         self.clear()
-        self.geometry('450x250')
-        lbl = Label(self, text=f"YOU DEAD FOR {self.time_pass}", font=("Arial Bold", 30), bg='red')
-        lbl.grid(row=200, column=150)
-        restart_button = Button(width=20, text="RESTART")
-        restart_button.grid(row=250, column=150)
+        self.geometry('324x250')
+        lbl = Label(self, text=f"YOU DEAD FOR {self.time_pass}", font="Calibri 27 bold", bg='red')
+        lbl.grid(row=0, column=0)
+        lbl2 = Label(self, text="😈💣😈💣😈💣\n", font="Calibri 22 bold", fg="black", bg="#bcb9ed")
+        lbl2.grid(row=1, column=0)
+        restart_button = Button(width=20, text="༼ つ ◕_◕ ༽つ RESTART", height=3, font="Calibri 16 bold")
+        restart_button.grid(row=2, column=0)
         restart_button.bind('<Button-1>', lambda event: self.create_start_menu())
 
     def game_won(self):
         self.clear()
-        self.geometry('450x250')
-        lbl = Label(self, text=f"YOU WIN FOR {self.time_pass}", font=("Arial Bold", 30), bg='green')
-        lbl.grid(row=200, column=150)
-        restart_button = Button(self.game_window, width=20, text="RESTART")
-        restart_button.grid(row=250, column=150)
+        self.geometry('324x250')
+        lbl = Label(self, text=f"YOU WIN FOR {self.time_pass}", font="Calibri 27 bold", bg='green')
+        lbl.grid(row=0, column=0)
+        lbl2 = Label(self, text="👍✨💯👌\n", font="Calibri 22 bold", bg='#bcb9ed', fg="yellow")
+        lbl2.grid(row=1, column=0)
+        restart_button = Button(self.game_window, width=18, text="👉 RESTART 👈", height=3, font="Calibri 16 bold")
+        restart_button.grid(row=2, column=0)
         restart_button.bind('<Button-1>', lambda event: self.create_start_menu())
 
     def stage_start(self):
@@ -136,10 +147,12 @@ class GameView(tkinter.Tk):
         self.clear()
 
         gameMap = Creating_Map(self.lvl.get())
-        if self.lvl.get() == 1:
-            self.set_size('700x450')
+        if self.lvl.get() == 0:
+            self.set_size('350x230')
+        elif self.lvl.get() == 1:
+            self.set_size('600x450')
         elif self.lvl.get() == 2:
-            self.set_size('1100x800')
+            self.set_size('1000x700')
 
         gameModel = GameModel(gameMap)
         self.controller.set_game_model(gameModel)

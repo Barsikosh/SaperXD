@@ -2,6 +2,7 @@ import celery
 import threading
 import time
 
+
 class Controller:
     def __init__(self):
         self.game_model = None
@@ -44,7 +45,6 @@ class Controller:
 
     def get_time(self):
         return self.game_model.get_left_time()
-
 
     def stop_game(self, event):
         self.game_view.stage_start()
