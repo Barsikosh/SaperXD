@@ -1,10 +1,11 @@
-from Saper2.Model.Timer import Timer
 from Saper2.Model.Pole import Pole
+from Saper2.Model.Timer import Timer
 
 
 class GameModel:
 
     def __init__(self, new_game_map):
+        self.count_mines = 0
         self.game_map = None
         self.flags = []
         self.height = len(new_game_map)
@@ -19,6 +20,8 @@ class GameModel:
         for i in range(self.height):
             for j in range(self.width):
                 self.game_map[i][j] = Pole(i, j, arr[i][j])
+                if self.game_map[i][j].mine:
+                    self.count_mines+=1
 
     def start_timer(self):
         self.timer = Timer()
@@ -53,11 +56,11 @@ class GameModel:
         pole.flag = 1
         self.opened_fields += 1
         self.controller.show_pole(x, y, pole.value)
-        if self.opened_fields >= self.width * self.height:
+        if self.opened_fields >= self.width * self.height - self.count_mines:
             self.controller.game_won()
         self.open_neighbor(x, y)
 
-    def check_bombs(self, y, x):
+    def check_bombs(self, x, y):
         for dx in range(-1, 2):
             for dy in range(-1, 2):
                 if not ((x + dx < 0) or (y + dy < 0) or (x + dx >= self.height) or (y + dy >= self.width)):
